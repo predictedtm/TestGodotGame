@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://bl43mdg217fwd"]
+
+[ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/character_body_3d.gd" id="1_00g15"]
+[ext_resource type="ArrayMesh" uid="uid://dsdi8dqpc1irt" path="res://StylizedDogMesh.res" id="1_ib474"]
+[ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://camera_3d.gd" id="2_00g15"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x8ou0"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ib474"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_00g15"]
+size = Vector3(200, 1, 200)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+disable_mode = 2
+script = ExtResource("1_00g15")
+
+[node name="DogMesh" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = ExtResource("1_ib474")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.10937795, 0)
+shape = SubResource("BoxShape3D_x8ou0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("2_00g15")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
+transform = Transform3D(0.8660254, -0.35355338, 0.35355338, 0, 0.70710677, 0.70710677, -0.5, -0.6123724, 0.6123724, 0, 0, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+physics_interpolation_mode = 1
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, -0.4681512, 0)
+mesh = SubResource("PlaneMesh_ib474")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_00g15")
+debug_color = Color(0.9411359, 0.101344384, 0.5520663, 0.41960785)

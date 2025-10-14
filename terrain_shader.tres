@@ -1,0 +1,24 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cc6au74cds87p"]
+
+[ext_resource type="Shader" uid="uid://dgph6yop7r8bb" path="res://terrain_shader.gdshader" id="1_28sue"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_28sue")
+shader_parameter/amplitude = 5.0
+shader_parameter/noise_frequency = 5.0
+shader_parameter/noise_seed = 0.0
+shader_parameter/_octaves = 5.0
+shader_parameter/_persistence = 6.0
+shader_parameter/_lacunarity = 10.0
+shader_parameter/grass_color = Color(0.1, 0.4, 0.05, 1)
+shader_parameter/dirt_color = Color(0.4, 0.25, 0.1, 1)
+shader_parameter/path_color = Color(0.6, 0.6, 0.6, 1)
+shader_parameter/grass_roughness = 0.4
+shader_parameter/dirt_roughness = 0.9
+shader_parameter/path_roughness = 0.8
+shader_parameter/grass_metallic = 0.1
+shader_parameter/dirt_metallic = 0.1
+shader_parameter/path_noise_scale = 0.05
+shader_parameter/path_steepness_limit = 0.2
+shader_parameter/path_blend_sharpness = 0.0
