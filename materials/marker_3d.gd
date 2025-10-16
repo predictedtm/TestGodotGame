@@ -14,7 +14,7 @@ func _ready() -> void:
 	current_interest = max_interest
 
 # This is called by the RandomWalker to dynamically adjust interest.
-func update_interest(walker_position: Vector3, max_distance: float, delta: float) -> void:
+func update_interest(walker_position: Vector3, delta: float) -> void:
 	var distance: float = global_transform.origin.distance_to(walker_position)
 	
 	# Check if the walker is "very close" (e.g., within 2 units)
@@ -26,6 +26,7 @@ func update_interest(walker_position: Vector3, max_distance: float, delta: float
 		# Use a higher rate for fast depletion
 		var depletion_rate = 1.0 # Deplete quickly when standing on top of it
 		current_interest -= depletion_rate * delta
+		print("depletion")
 	else:
 		# RESTORE interest when the walker is far away
 		current_interest += restoration_rate * delta
