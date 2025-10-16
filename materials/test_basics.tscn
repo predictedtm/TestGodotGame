@@ -1,30 +1,64 @@
-[gd_scene load_steps=7 format=3 uid="uid://bl43mdg217fwd"]
+[gd_scene load_steps=14 format=3 uid="uid://bl43mdg217fwd"]
 
 [ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/character_body_3d.gd" id="1_00g15"]
+[ext_resource type="Script" uid="uid://3d3283qpn3w6" path="res://materials/main_scene.gd" id="1_c1t23"]
 [ext_resource type="ArrayMesh" uid="uid://dsdi8dqpc1irt" path="res://StylizedDogMesh.res" id="1_ib474"]
 [ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://camera_3d.gd" id="2_00g15"]
+[ext_resource type="Shader" uid="uid://c12dx3er16x15" path="res://materials/checker_pattern.gdshader" id="4_x8ou0"]
+[ext_resource type="Script" uid="uid://djw6di6r0odx0" path="res://materials/marker_3d.gd" id="6_03nby"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ou0"]
+albedo_color = Color(0.75464696, 0.18266335, 4.9093364e-06, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x8ou0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ib474"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c1t23"]
+render_priority = 0
+shader = ExtResource("4_x8ou0")
+shader_parameter/color1 = Color(0, 0, 0, 1)
+shader_parameter/color2 = Color(1, 1, 1, 1)
+shader_parameter/tile_size = 1.0
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_00g15"]
 size = Vector3(200, 1, 200)
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_c1t23"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_03nby"]
+transparency = 1
+albedo_color = Color(1, 0.1254902, 0.60784316, 0.93333334)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_c1t23")
+
+[node name="RandomWalker" type="CharacterBody3D" parent="."]
 disable_mode = 2
 script = ExtResource("1_00g15")
+speed = 0.5
+turn_agility = 5.0
+min_walk_time = 0.0
+max_walk_time = 0.0
+no_random_break = true
+poi_walk_chance = 0.7
+time_for_target_reconsideration = 3.0
 
-[node name="DogMesh" type="MeshInstance3D" parent="CharacterBody3D"]
+[node name="DogMesh" type="MeshInstance3D" parent="RandomWalker"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 mesh = ExtResource("1_ib474")
+surface_material_override/0 = SubResource("StandardMaterial3D_x8ou0")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RandomWalker"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.10937795, 0)
 shape = SubResource("BoxShape3D_x8ou0")
 
+[node name="StateTimer" type="Timer" parent="RandomWalker"]
+
+[node name="DirectionTimer" type="Timer" parent="RandomWalker"]
+
 [node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35353637, 0)
 script = ExtResource("2_00g15")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
@@ -33,14 +67,26 @@ light_energy = 2.0
 shadow_enabled = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0980638, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 physics_interpolation_mode = 1
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, -0.4681512, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 mesh = SubResource("PlaneMesh_ib474")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_c1t23")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.81744576, 0)
 shape = SubResource("BoxShape3D_00g15")
 debug_color = Color(0.9411359, 0.101344384, 0.5520663, 0.41960785)
+
+[node name="Waypoints" type="Node3D" parent="."]
+
+[node name="Marker3D" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.189822)
+script = ExtResource("6_03nby")
+
+[node name="debugmesh" type="MeshInstance3D" parent="Waypoints/Marker3D"]
+mesh = SubResource("CylinderMesh_c1t23")
+surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
