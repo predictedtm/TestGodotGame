@@ -1,8 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bl43mdg217fwd"]
+[gd_scene load_steps=14 format=3 uid="uid://bl43mdg217fwd"]
 
-[ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/character_body_3d.gd" id="1_00g15"]
+[ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/RandomWalker_Dog.gd" id="1_00g15"]
 [ext_resource type="ArrayMesh" uid="uid://dsdi8dqpc1irt" path="res://StylizedDogMesh.res" id="1_ib474"]
-[ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://camera_3d.gd" id="2_00g15"]
+[ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://Player.gd" id="2_00g15"]
 [ext_resource type="Shader" uid="uid://c12dx3er16x15" path="res://materials/checker_pattern.gdshader" id="4_x8ou0"]
 [ext_resource type="Script" uid="uid://dkfronjejyrdl" path="res://materials/waypoints.gd" id="6_03nby"]
 
@@ -29,16 +29,22 @@ size = Vector3(200, 1, 200)
 transparency = 1
 albedo_color = Color(1, 0.1254902, 0.60784316, 0.93333334)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_c1t23"]
+
 [node name="Node3D" type="Node3D"]
 
 [node name="RandomWalker" type="CharacterBody3D" parent="."]
 disable_mode = 2
 script = ExtResource("1_00g15")
 turn_agility = 5.0
+stop_at_marker = true
 min_walk_time = 0.0
-max_walk_time = 0.0
+max_walk_time = 1.0
 no_random_break = true
-waypoints_container_path = NodePath("../Waypoints")
+poi_walk_chance = 0.8
+time_for_target_reconsideration = 2.0
+max_interest = 100.0
+depletion_distance = 0.1
 
 [node name="DogMesh" type="MeshInstance3D" parent="RandomWalker"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
@@ -52,15 +58,6 @@ shape = SubResource("BoxShape3D_x8ou0")
 [node name="StateTimer" type="Timer" parent="RandomWalker"]
 
 [node name="DirectionTimer" type="Timer" parent="RandomWalker"]
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35353637, 0)
-script = ExtResource("2_00g15")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
-transform = Transform3D(0.8660254, -0.35355338, 0.35355338, 0, 0.70710677, 0.70710677, -0.5, -0.6123724, 0.6123724, 0, 0, 0)
-light_energy = 2.0
-shadow_enabled = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0980638, 0)
@@ -83,6 +80,8 @@ plane_half_size = Vector2(100, 100)
 
 [node name="Marker3D" type="Marker3D" parent="Waypoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.189822)
+metadata/poi_type = "FOOD"
+metadata/is_poi = true
 
 [node name="debugmesh" type="MeshInstance3D" parent="Waypoints/Marker3D"]
 mesh = SubResource("CylinderMesh_c1t23")
@@ -90,23 +89,50 @@ surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
 
 [node name="Marker3D2" type="Marker3D" parent="Waypoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.189822)
+metadata/poi_type = "FOOD"
+metadata/is_poi = true
 
 [node name="debugmesh" type="MeshInstance3D" parent="Waypoints/Marker3D2"]
 mesh = SubResource("CylinderMesh_c1t23")
 surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
 
 [node name="Marker3D3" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.379644)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.189822)
+metadata/poi_type = "FOOD"
+metadata/is_poi = true
 
 [node name="debugmesh" type="MeshInstance3D" parent="Waypoints/Marker3D3"]
 mesh = SubResource("CylinderMesh_c1t23")
-skeleton = NodePath("../../Marker3D3")
 surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
 
 [node name="Marker3D4" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15.569467)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.189822)
+metadata/poi_type = "FOOD"
+metadata/is_poi = true
 
 [node name="debugmesh" type="MeshInstance3D" parent="Waypoints/Marker3D4"]
 mesh = SubResource("CylinderMesh_c1t23")
-skeleton = NodePath("../../Marker3D4")
+surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.7633133)
+script = ExtResource("2_00g15")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35353637, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CharacterBody3D/Camera3D"]
+transform = Transform3D(0.8660254, -0.35355338, 0.35355338, 0, 0.70710677, 0.70710677, -0.5, -0.6123724, 0.6123724, 0, 0, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("SphereShape3D_c1t23")
+
+[node name="PlayerMarker" type="Marker3D" parent="CharacterBody3D"]
+metadata/poi_type = "HUMAN"
+metadata/is_poi = true
+
+[node name="debugmesh" type="MeshInstance3D" parent="CharacterBody3D/PlayerMarker"]
+mesh = SubResource("CylinderMesh_c1t23")
 surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
