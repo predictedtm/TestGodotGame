@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://bl43mdg217fwd"]
+[gd_scene load_steps=16 format=3 uid="uid://bl43mdg217fwd"]
 
 [ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/RandomWalker_Dog.gd" id="1_00g15"]
 [ext_resource type="ArrayMesh" uid="uid://dsdi8dqpc1irt" path="res://StylizedDogMesh.res" id="1_ib474"]
 [ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://Player.gd" id="2_00g15"]
 [ext_resource type="Shader" uid="uid://c12dx3er16x15" path="res://materials/checker_pattern.gdshader" id="4_x8ou0"]
 [ext_resource type="Script" uid="uid://dkfronjejyrdl" path="res://materials/waypoints.gd" id="6_03nby"]
+[ext_resource type="Script" uid="uid://djvhomuhbqgtq" path="res://Inventory.gd" id="6_sgnf5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ou0"]
 albedo_color = Color(0.75464696, 0.18266335, 4.9093364e-06, 1)
@@ -29,11 +30,15 @@ size = Vector3(200, 1, 200)
 transparency = 1
 albedo_color = Color(1, 0.1254902, 0.60784316, 0.93333334)
 
+[sub_resource type="Resource" id="Resource_j3rui"]
+script = ExtResource("6_sgnf5")
+metadata/_custom_type_script = "uid://djvhomuhbqgtq"
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_c1t23"]
 
 [node name="Node3D" type="Node3D"]
 
-[node name="RandomWalker" type="CharacterBody3D" parent="."]
+[node name="RandomWalker" type="CharacterBody3D" parent="." node_paths=PackedStringArray("leash_target_node")]
 disable_mode = 2
 script = ExtResource("1_00g15")
 turn_agility = 5.0
@@ -42,9 +47,10 @@ min_walk_time = 0.0
 max_walk_time = 1.0
 no_random_break = true
 poi_walk_chance = 0.8
-time_for_target_reconsideration = 2.0
+time_for_target_reconsideration = 1.0
 max_interest = 100.0
 depletion_distance = 0.1
+leash_target_node = NodePath("../CharacterBody3D")
 
 [node name="DogMesh" type="MeshInstance3D" parent="RandomWalker"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
@@ -58,6 +64,8 @@ shape = SubResource("BoxShape3D_x8ou0")
 [node name="StateTimer" type="Timer" parent="RandomWalker"]
 
 [node name="DirectionTimer" type="Timer" parent="RandomWalker"]
+
+[node name="WalkerConnectionPoint" type="Node3D" parent="RandomWalker"]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0980638, 0)
@@ -117,6 +125,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.7633133)
 script = ExtResource("2_00g15")
+inventory = SubResource("Resource_j3rui")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35353637, 0)
@@ -136,3 +145,19 @@ metadata/is_poi = true
 [node name="debugmesh" type="MeshInstance3D" parent="CharacterBody3D/PlayerMarker"]
 mesh = SubResource("CylinderMesh_c1t23")
 surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
+
+[node name="LeashJoint" type="Generic6DOFJoint3D" parent="CharacterBody3D"]
+node_a = NodePath("..")
+node_b = NodePath("../../RandomWalker")
+linear_spring_x/enabled = true
+linear_spring_x/stiffness = 15.0
+linear_spring_x/damping = 5.0
+linear_spring_x/equilibrium_point = 2.0
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 15.0
+linear_spring_y/damping = 5.0
+linear_spring_y/equilibrium_point = 2.0
+linear_spring_z/enabled = true
+linear_spring_z/stiffness = 15.0
+linear_spring_z/damping = 5.0
+linear_spring_z/equilibrium_point = 2.0
