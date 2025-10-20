@@ -1,11 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://bl43mdg217fwd"]
+[gd_scene load_steps=18 format=3 uid="uid://bl43mdg217fwd"]
 
 [ext_resource type="Script" uid="uid://b2loyaavfpxau" path="res://materials/RandomWalker_Dog.gd" id="1_00g15"]
 [ext_resource type="ArrayMesh" uid="uid://dsdi8dqpc1irt" path="res://StylizedDogMesh.res" id="1_ib474"]
 [ext_resource type="Script" uid="uid://b2tmd18qo1kfe" path="res://Player.gd" id="2_00g15"]
+[ext_resource type="Script" uid="uid://btc5sgvxheup0" path="res://materials/leash_visual.gd" id="3_sgnf5"]
 [ext_resource type="Shader" uid="uid://c12dx3er16x15" path="res://materials/checker_pattern.gdshader" id="4_x8ou0"]
 [ext_resource type="Script" uid="uid://dkfronjejyrdl" path="res://materials/waypoints.gd" id="6_03nby"]
-[ext_resource type="Script" uid="uid://djvhomuhbqgtq" path="res://Inventory.gd" id="6_sgnf5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ou0"]
 albedo_color = Color(0.75464696, 0.18266335, 4.9093364e-06, 1)
@@ -30,27 +30,30 @@ size = Vector3(200, 1, 200)
 transparency = 1
 albedo_color = Color(1, 0.1254902, 0.60784316, 0.93333334)
 
-[sub_resource type="Resource" id="Resource_j3rui"]
-script = ExtResource("6_sgnf5")
-metadata/_custom_type_script = "uid://djvhomuhbqgtq"
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_c1t23"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sgnf5"]
+albedo_color = Color(0.62425137, 0.62425107, 0, 1)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_j3rui"]
+material = SubResource("StandardMaterial3D_sgnf5")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.2
+rings = 8
+
+[sub_resource type="MultiMesh" id="MultiMesh_6jas0"]
+transform_format = 1
+mesh = SubResource("CylinderMesh_j3rui")
 
 [node name="Node3D" type="Node3D"]
 
-[node name="RandomWalker" type="CharacterBody3D" parent="." node_paths=PackedStringArray("leash_target_node")]
+[node name="RandomWalker" type="CharacterBody3D" parent="."]
 disable_mode = 2
 script = ExtResource("1_00g15")
-turn_agility = 5.0
-stop_at_marker = true
-min_walk_time = 0.0
-max_walk_time = 1.0
-no_random_break = true
-poi_walk_chance = 0.8
-time_for_target_reconsideration = 1.0
-max_interest = 100.0
-depletion_distance = 0.1
-leash_target_node = NodePath("../CharacterBody3D")
+base_speed = 0.1
 
 [node name="DogMesh" type="MeshInstance3D" parent="RandomWalker"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
@@ -125,7 +128,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_03nby")
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.7633133)
 script = ExtResource("2_00g15")
-inventory = SubResource("Resource_j3rui")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35353637, 0)
@@ -161,3 +163,7 @@ linear_spring_z/enabled = true
 linear_spring_z/stiffness = 15.0
 linear_spring_z/damping = 5.0
 linear_spring_z/equilibrium_point = 2.0
+
+[node name="LeashVisual" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MultiMesh_6jas0")
+script = ExtResource("3_sgnf5")
